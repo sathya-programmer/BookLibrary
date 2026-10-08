@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumen Library – find your next book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--soft:#f4f7ff;--ink:#1b2340;--mute:#5d6786;--line:#e3e8f6;--blue:#2f6bff;--coral:#ff6b57;--sun:#ffc93c;--mint:#2bc48a;
+--serif:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.55 var(--sans);color:var(--ink);background:var(--bg)}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font:800 24px var(--serif);display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--sun),var(--coral));display:grid;place-items:center;font-style:normal;font-size:16px}
+.shelfbtn{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:8px 16px;font-weight:700}
+.shelfbtn b{background:var(--coral);color:#fff;border-radius:99px;padding:0 8px;margin-left:6px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:36px 0 28px}
+h1{font:800 clamp(38px,6vw,64px)/1.05 var(--serif);letter-spacing:-.02em}
+.hero p{color:var(--mute);margin:16px 0 22px;max-width:46ch;font-size:18px}
+.ask{display:flex;gap:8px;background:#fff;border:2px solid var(--ink);border-radius:18px;padding:8px;box-shadow:6px 6px 0 var(--sun)}
+.ask input{flex:1;border:0;padding:10px 12px;font:inherit;min-width:0;background:transparent}
+.ask input:focus{outline:0}
+.ask button{border:0;background:var(--blue);color:#fff;font-weight:700;border-radius:12px;padding:0 22px}
+.tries{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tries button{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--ink)}
+.tries button:hover{border-color:var(--blue)}
+.stack{display:flex;justify-content:center;min-height:300px;align-items:center}
+.stack img{width:34%;aspect-ratio:2/3;object-fit:cover;border-radius:8px;box-shadow:0 12px 28px rgba(27,35,64,.22);margin-left:-8%;background:var(--soft);border:3px solid #fff}
+.stack img:nth-child(1){transform:rotate(-8deg) translateY(14px)}.stack img:nth-child(2){transform:rotate(-2deg)}
+.stack img:nth-child(3){transform:rotate(4deg) translateY(-10px)}.stack img:nth-child(4){transform:rotate(9deg) translateY(12px)}
+.genres{display:flex;gap:10px;overflow-x:auto;padding:6px 0 18px;scrollbar-width:thin}
+.genres button{flex:none;border:0;border-radius:14px;padding:10px 18px;font-weight:700;color:var(--ink)}
+.genres button[aria-pressed=true]{outline:3px solid var(--ink)}
+.bar{display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 16px;gap:12px;flex-wrap:wrap}
+h2{font:800 28px var(--serif)}
+.bar span{color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:22px}
+.card{background:none;border:0;text-align:left;padding:0;color:inherit}
+.cover{aspect-ratio:2/3;border-radius:6px 12px 12px 6px;overflow:hidden;position:relative;box-shadow:0 8px 20px rgba(27,35,64,.16);border-left:5px solid rgba(0,0,0,.12);transition:transform .2s}
+.card:hover .cover{transform:translateY(-5px)}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover.ph{display:grid;place-items:center;padding:14px;text-align:center;font:700 16px/1.2 var(--serif);color:#fff}
+.card h3{font:600 15px/1.3 var(--sans);margin-top:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card small{color:var(--mute);display:block}
+.msg{padding:50px 0;text-align:center;color:var(--mute);grid-column:1/-1}
+.more{display:block;margin:30px auto;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:10px 26px;font-weight:700}
+.sk{aspect-ratio:2/3;border-radius:10px;background:linear-gradient(90deg,var(--soft),#e9efff,var(--soft));background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+dialog{border:0;border-radius:22px;padding:0;max-width:760px;width:calc(100% - 28px);box-shadow:0 30px 80px rgba(27,35,64,.35);color:var(--ink)}
+dialog::backdrop{background:rgba(27,35,64,.45)}
+.det{display:grid;grid-template-columns:220px 1fr;gap:26px;padding:28px;position:relative}
+.det .cover{box-shadow:0 12px 26px rgba(27,35,64,.25)}
+.det h2{font-size:30px;line-height:1.1}
+.det .by{color:var(--mute);margin:6px 0 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.tags span{background:var(--soft);border-radius:99px;padding:3px 12px;font-size:13px}
+.desc{max-height:170px;overflow:auto;color:#38415f}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.acts a,.acts button{border-radius:12px;padding:9px 16px;font-weight:700;text-decoration:none;border:2px solid var(--ink);background:#fff;color:var(--ink)}
+.acts .pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.x{position:absolute;top:12px;right:14px;border:0;background:var(--soft);width:34px;height:34px;border-radius:50%;font-size:18px}
+footer{border-top:1px solid var(--line);margin-top:50px;padding:24px 0;color:var(--mute);font-size:14px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.stack{min-height:220px}.det{grid-template-columns:1fr}.det .cover{max-width:160px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><i>📖</i>Lumen Library</div>
+  <button class="shelfbtn" id="shelfBtn">My shelf<b id="cnt">0</b></button>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Tell us what you feel like reading.</h1>
+    <p>Describe a book in your own words. Lumen searches millions of titles from Open Library and brings back covers, authors and summaries.</p>
+    <form class="ask" id="f" role="search">
+      <input id="q" aria-label="Describe the book you want" placeholder="e.g. space adventure with a clever robot" autocomplete="off">
+      <button>Find books</button>
+    </form>
+    <div class="tries" id="tries"></div>
+  </div>
+  <div class="stack" id="stack" aria-hidden="true"></div>
+</section>
+
+<div class="genres" id="genres" role="group" aria-label="Browse by genre"></div>
+
+<div class="bar"><h2 id="title">Popular right now</h2><span id="meta"></span></div>
+<div class="grid" id="grid"></div>
+<button class="more" id="more" hidden>Show more books</button>
+<footer>Book data and covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>. Needs an internet connection.</footer>
+</div>
+
+<dialog id="dlg"><div id="det"></div></dialog>
+
+<script>
+// Same data as config.json, so the site also works when opened by double-click
+window.LUMEN_CONFIG = {
+  "colors": [
+    "#2f6bff",
+    "#ff6b57",
+    "#2bc48a",
+    "#8a5cf6",
+    "#f59e0b",
+    "#0ea5c6"
+  ],
+  "genres": [
+    {
+      "name": "Fantasy",
+      "color": "#ffe7a3"
+    },
+    {
+      "name": "Mystery",
+      "color": "#ffd3cc"
+    },
+    {
+      "name": "Science fiction",
+      "color": "#cfe0ff"
+    },
+    {
+      "name": "Romance",
+      "color": "#ffd6ec"
+    },
+    {
+      "name": "History",
+      "color": "#d6f5e6"
+    },
+    {
+      "name": "Science",
+      "color": "#d9ecff"
+    },
+    {
+      "name": "Cooking",
+      "color": "#fff0b8"
+    },
+    {
+      "name": "Poetry",
+      "color": "#e8dcff"
+    },
+    {
+      "name": "Children",
+      "color": "#ffe0cc"
+    },
+    {
+      "name": "Biography",
+      "color": "#d3f1f5"
+    }
+  ],
+  "tries": [
+    "a cozy mystery in a small town",
+    "books like Harry Potter",
+    "funny stories about robots",
+    "learn about the universe",
+    "a love story set in Paris"
+  ],
+  "stopWords": [
+    "a",
+    "an",
+    "the",
+    "of",
+    "in",
+    "on",
+    "for",
+    "to",
+    "and",
+    "or",
+    "with",
+    "about",
+    "me",
+    "my",
+    "i",
+    "want",
+    "some",
+    "something",
+    "books",
+    "book",
+    "novel",
+    "novels",
+    "that",
+    "is",
+    "are",
+    "like",
+    "set",
+    "story",
+    "stories",
+    "find",
+    "give",
+    "show",
+    "reading",
+    "read",
+    "feel",
+    "feels"
+  ]
+};
+
+const API='https://openlibrary.org', COV='https://covers.openlibrary.org/b/id/';
+const $=s=>document.querySelector(s);
+let COLORS=[],GENRES=[],TRIES=[],STOP=new Set();
+let state={q:'',subject:'',page:1,total:0,items:[]};
+let shelf=JSON.parse(safeGet('shelf')||'[]');
+
+function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function safeSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hue=t=>COLORS[[...t].reduce((a,c)=>a+c.charCodeAt(0),0)%COLORS.length];
+
+function coverHTML(b,size='M'){
+  return b.cover_i?`<div class="cover"><img loading="lazy" src="${COV}${b.cover_i}-${size}.jpg" alt="Cover of ${esc(b.title)}"></div>`
+   :`<div class="cover ph" style="background:${hue(b.title)}">${esc(b.title)}</div>`;
+}
+function renderGenres(){
+  $('#genres').innerHTML=GENRES.map(({name:g,color:c})=>`<button style="background:${c}" aria-pressed="${state.subject===g}" data-g="${g}">${g}</button>`).join('');
+}
+function skeleton(){$('#grid').innerHTML=Array(12).fill('<div class="sk"></div>').join('')}
+
+async function load(append=false){
+  if(!append){state.page=1;state.items=[];skeleton()}
+  const fields='key,title,author_name,first_publish_year,cover_i,subject,edition_count';
+  let p=new URLSearchParams({limit:24,page:state.page,fields,sort:state.q||state.subject?'':'rating'});
+  if(state.subject&&!state.q)p.set('q','subject:"'+state.subject.toLowerCase()+'" has_fulltext:true');
+  else if(state.q)p.set('q',state.q);
+  else p.set('q','subject:fiction ratings_count:[50 TO *]');
+  if(!p.get('sort'))p.delete('sort');
+  try{
+    const r=await fetch(API+'/search.json?'+p);
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    state.total=d.numFound;
+    state.items=state.items.concat(d.docs);
+    draw();
+  }catch(e){
+    $('#grid').innerHTML='<div class="msg">Could not reach Open Library. Check your internet connection and try again.</div>';
+    $('#more').hidden=true;
+  }
+}
+function draw(){
+  const g=$('#grid');
+  if(!state.items.length){g.innerHTML='<div class="msg">No books found. Try different words, like a topic or an author.</div>';$('#more').hidden=true;$('#meta').textContent='';return}
+  g.innerHTML=state.items.map((b,i)=>`<button class="card" data-i="${i}">${coverHTML(b)}<h3>${esc(b.title)}</h3><small>${esc((b.author_name||['Unknown author'])[0])}${b.first_publish_year?' · '+b.first_publish_year:''}</small></button>`).join('');
+  $('#meta').textContent=state.total.toLocaleString()+' books found';
+  $('#more').hidden=state.items.length>=state.total;
+}
+
+function smartQuery(text){
+  const t=text.trim();
+  const m=t.match(/^books like (.+)$/i);
+  const words=(m?m[1]:t).toLowerCase().replace(/[^\p{L}\p{N}\s'-]/gu,' ').split(/\s+/).filter(w=>w&&!STOP.has(w));
+  return words.length?words.join(' '):t;
+}
+function search(text){
+  if(!text.trim())return;
+  state.subject='';state.q=smartQuery(text);renderGenres();
+  $('#title').textContent='Results for “'+text.trim()+'”';
+  load();
+  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function openBook(b){
+  const dlg=$('#dlg'),saved=shelf.some(s=>s.key===b.key);
+  const subs=(b.subject||[]).slice(0,5).map(s=>`<span>${esc(s)}</span>`).join('');
+  $('#det').innerHTML=`<div class="det"><button class="x" aria-label="Close" onclick="dlg.close()">✕</button>${coverHTML(b,'L')}
+   <div><h2>${esc(b.title)}</h2><p class="by">by ${esc((b.author_name||['Unknown author']).join(', '))}${b.first_publish_year?' · first published '+b.first_publish_year:''}</p>
+   <div class="tags">${subs}</div><div class="desc" id="desc">Loading summary…</div>
+   <div class="acts"><button class="pri" id="save" style="background:${saved?'var(--mint)':'var(--blue)'}">${saved?'On your shelf ✓':'Add to my shelf'}</button>
+   <a href="${API}${b.key}" target="_blank" rel="noopener">Read on Open Library</a></div></div></div>`;
+  dlg.showModal();
+  $('#save').onclick=()=>{toggleShelf(b);openBook(b)};
+  try{
+    const w=await (await fetch(API+b.key+'.json')).json();
+    const d=typeof w.description==='string'?w.description:w.description?.value;
+    $('#desc').textContent=d?d.split('\n')[0].slice(0,700):'No summary is available for this book yet.';
+  }catch(e){$('#desc').textContent='The summary could not be loaded.'}
+}
+function toggleShelf(b){
+  shelf=shelf.some(s=>s.key===b.key)?shelf.filter(s=>s.key!==b.key):[...shelf,{key:b.key,title:b.title,author_name:b.author_name,first_publish_year:b.first_publish_year,cover_i:b.cover_i,subject:b.subject}];
+  safeSet('shelf',JSON.stringify(shelf));$('#cnt').textContent=shelf.length;
+}
+function showShelf(){
+  state.items=shelf.slice();state.total=shelf.length;state.q='';state.subject='';renderGenres();
+  $('#title').textContent='My shelf';
+  if(!shelf.length){$('#grid').innerHTML='<div class="msg">Your shelf is empty. Open any book and choose “Add to my shelf”.</div>';$('#meta').textContent='';$('#more').hidden=true}
+  else draw();
+  $('#title').scrollIntoView({behavior:'smooth'});
+}
+
+async function init(){
+  let cfg;
+  try{ cfg=await (await fetch('data/config.json')).json(); }
+  catch(e){ cfg=window.LUMEN_CONFIG; }   // fallback when opened without a web server
+  if(!cfg){
+    $('#grid').innerHTML='<div class="msg">Could not load the site data (data/config.json or data/config.js).</div>';
+    return;
+  }
+  COLORS=cfg.colors;GENRES=cfg.genres;TRIES=cfg.tries;STOP=new Set(cfg.stopWords);
+  // events
+  $('#f').onsubmit=e=>{e.preventDefault();search($('#q').value)};
+  $('#tries').innerHTML=TRIES.map(t=>`<button type="button">${t}</button>`).join('');
+  $('#tries').onclick=e=>{if(e.target.tagName==='BUTTON'){$('#q').value=e.target.textContent;search(e.target.textContent)}};
+  $('#genres').onclick=e=>{const g=e.target.dataset.g;if(!g)return;state.subject=g;state.q='';renderGenres();$('#title').textContent=g;load()};
+  $('#grid').onclick=e=>{const c=e.target.closest('.card');if(c)openBook(state.items[+c.dataset.i])};
+  $('#more').onclick=()=>{state.page++;load(true)};
+  $('#shelfBtn').onclick=showShelf;
+  $('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')e.target.close()});
+  $('#cnt').textContent=shelf.length;
+
+  renderGenres();load();
+  fetch(API+'/trending/daily.json?limit=8').then(r=>r.json()).then(d=>{
+    $('#stack').innerHTML=d.works.filter(w=>w.cover_i).slice(0,4).map(w=>`<img src="${COV}${w.cover_i}-M.jpg" alt="">`).join('');
+  }).catch(()=>{});
+}
+init();
+</script>
+</body>
+</html>

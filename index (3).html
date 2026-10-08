@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumen Library – find your next book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><i>📖</i>Lumen Library</div>
+  <button class="shelfbtn" id="shelfBtn">My shelf<b id="cnt">0</b></button>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Tell us what you feel like reading.</h1>
+    <p>Describe a book in your own words. Lumen searches millions of titles from Open Library and brings back covers, authors and summaries.</p>
+    <form class="ask" id="f" role="search">
+      <input id="q" aria-label="Describe the book you want" placeholder="e.g. space adventure with a clever robot" autocomplete="off">
+      <button>Find books</button>
+    </form>
+    <div class="tries" id="tries"></div>
+  </div>
+  <div class="stack" id="stack" aria-hidden="true"></div>
+</section>
+
+<div class="genres" id="genres" role="group" aria-label="Browse by genre"></div>
+
+<div class="bar"><h2 id="title">Popular right now</h2><span id="meta"></span></div>
+<div class="grid" id="grid"></div>
+<button class="more" id="more" hidden>Show more books</button>
+<footer>Book data and covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>. Needs an internet connection.</footer>
+</div>
+
+<dialog id="dlg"><div id="det"></div></dialog>
+
+<script src="data/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
